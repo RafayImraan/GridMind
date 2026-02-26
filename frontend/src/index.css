@@ -1,0 +1,114 @@
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600;6..96,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink-deep: #080a0f;
+  --ink-mid: #101827;
+  --ink-soft: #1a2333;
+  --gold: #d7b36f;
+  --gold-deep: #9f7c3c;
+  --pearl: #f6f2e8;
+}
+
+body {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: var(--pearl);
+  background:
+    radial-gradient(1200px 700px at 10% -5%, rgba(215, 179, 111, 0.18), transparent 60%),
+    radial-gradient(900px 620px at 100% 0%, rgba(143, 165, 196, 0.16), transparent 52%),
+    linear-gradient(130deg, var(--ink-deep) 0%, var(--ink-mid) 48%, #151d2c 100%);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.dashboard-shell {
+  position: relative;
+}
+
+.dashboard-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.03) 45%, transparent 100%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 78px,
+      rgba(215, 179, 111, 0.03) 78px,
+      rgba(215, 179, 111, 0.03) 79px
+    );
+  mix-blend-mode: screen;
+}
+
+.panel {
+  @apply rounded-2xl border p-5 shadow-panel backdrop-blur-md;
+  border-color: rgba(215, 179, 111, 0.24);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+    linear-gradient(180deg, rgba(16, 24, 39, 0.8), rgba(26, 35, 51, 0.82));
+}
+
+.lux-input {
+  @apply mt-1 w-full rounded-lg border px-3 py-2 text-sm transition;
+  border-color: rgba(215, 179, 111, 0.18);
+  background: rgba(7, 11, 18, 0.72);
+  color: #f6f2e8;
+}
+
+.lux-input:focus {
+  outline: none;
+  border-color: rgba(215, 179, 111, 0.6);
+  box-shadow: 0 0 0 2px rgba(215, 179, 111, 0.12);
+}
+
+.lux-input:disabled {
+  color: rgba(246, 242, 232, 0.55);
+}
+
+.gold-chip {
+  border: 1px solid rgba(215, 179, 111, 0.35);
+  background: linear-gradient(130deg, rgba(215, 179, 111, 0.2), rgba(159, 124, 60, 0.12));
+  color: #f1ddba;
+}
+
+@keyframes fade-lift {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-sheen {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(215, 179, 111, 0.28), 0 12px 30px rgba(215, 179, 111, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(215, 179, 111, 0.42), 0 18px 42px rgba(215, 179, 111, 0.22);
+  }
+}
+
+.anim-fade-lift {
+  animation: fade-lift 0.5s ease-out both;
+}
+
+.anim-sheen {
+  animation: pulse-sheen 4.2s ease-in-out infinite;
+}

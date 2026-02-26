@@ -1,0 +1,102 @@
+{
+  "bundle_path": "C:\\Users\\HomePC\\Documents\\gridmind\\backend\\models\\gridmind_ml_bundle_numpy.json",
+  "backend": "numpy_logistic",
+  "trained_at": "2026-02-26T01:09:11.572776+00:00",
+  "dataset_rows": 52560,
+  "global_metrics": {
+    "macro_pr_auc_holdout": 0.3574839722918062,
+    "recommended_ml_blend_weight": 0.5929935889167225
+  },
+  "targets": {
+    "overall_failure_72h_label": {
+      "model_name": "numpy_logistic_regression",
+      "train_cv_pr_auc": 0.9767009394618288,
+      "holdout_metrics": {
+        "roc_auc": 0.7273616474271585,
+        "pr_auc": 0.7105611605272089,
+        "brier": 0.20860111549360588,
+        "log_loss": 0.6121104635294576,
+        "accuracy": 0.6802701674277016,
+        "precision": 0.6432542624166049,
+        "recall": 0.7073568371713879,
+        "f1": 0.6737843346598078,
+        "ece_10_bins": 0.07557449476684885,
+        "positive_rate": 0.4667998477929985
+      },
+      "threshold": 0.3709543053420744,
+      "support": 42048
+    },
+    "power_failure_72h_label": {
+      "model_name": "numpy_logistic_regression",
+      "train_cv_pr_auc": 0.2586138154805768,
+      "holdout_metrics": {
+        "roc_auc": 0.5426971423732094,
+        "pr_auc": 0.07410504502255827,
+        "brier": 0.15756490075892438,
+        "log_loss": 0.4917349190186845,
+        "accuracy": 0.619482496194825,
+        "precision": 0.08462306540189715,
+        "recall": 0.5044642857142857,
+        "f1": 0.14493373236425822,
+        "ece_10_bins": 0.28287413165228437,
+        "positive_rate": 0.0639269406392694
+      },
+      "threshold": 0.4005686134404899,
+      "support": 42048
+    },
+    "transformer_overload_72h_label": {
+      "model_name": "numpy_logistic_regression",
+      "train_cv_pr_auc": 0.7251554592976642,
+      "holdout_metrics": {
+        "roc_auc": 0.6372048514688002,
+        "pr_auc": 0.18476745465128153,
+        "brier": 0.1573616265113347,
+        "log_loss": 0.4960733268393437,
+        "accuracy": 0.6358447488584474,
+        "precision": 0.18937530742744713,
+        "recall": 0.5913978494623656,
+        "f1": 0.28688524590163933,
+        "ece_10_bins": 0.22129862041151924,
+        "positive_rate": 0.12385844748858447
+      },
+      "threshold": 0.3679818922114519,
+      "support": 42048
+    },
+    "water_failure_72h_label": {
+      "model_name": "numpy_logistic_regression",
+      "train_cv_pr_auc": 0.45300701970369583,
+      "holdout_metrics": {
+        "roc_auc": 0.6463260250642534,
+        "pr_auc": 0.1496360964100099,
+        "brier": 0.24982635632811448,
+        "log_loss": 0.6926049899242974,
+        "accuracy": 0.4132420091324201,
+        "precision": 0.1406094968107725,
+        "recall": 0.9042844120328167,
+        "f1": 0.2433758586849853,
+        "ece_10_bins": 0.3982889634560022,
+        "positive_rate": 0.10435692541856925
+      },
+      "threshold": 0.4765122873795619,
+      "support": 42048
+    },
+    "traffic_failure_72h_label": {
+      "model_name": "numpy_logistic_regression",
+      "train_cv_pr_auc": 0.750013400812826,
+      "holdout_metrics": {
+        "roc_auc": 0.781473289404288,
+        "pr_auc": 0.6683501048479723,
+        "brier": 0.17485919376132755,
+        "log_loss": 0.539460633456428,
+        "accuracy": 0.783009893455099,
+        "precision": 0.6948198198198198,
+        "recall": 0.6733969986357435,
+        "f1": 0.6839406955798809,
+        "ece_10_bins": 0.11011212189215284,
+        "positive_rate": 0.3486491628614916
+      },
+      "threshold": 0.501176621602478,
+      "support": 42048
+    }
+  }
+}

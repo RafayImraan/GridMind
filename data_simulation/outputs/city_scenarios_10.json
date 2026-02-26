@@ -1,0 +1,968 @@
+[
+  {
+    "input": {
+      "city": "Metrovale",
+      "timestamp": "2026-02-25T18:56:55.161734+00:00",
+      "weather": {
+        "temperature_c": 29.6,
+        "humidity_percent": 36.0,
+        "heatwave_alert": false,
+        "rainfall_mm": 5.5
+      },
+      "power_grid": {
+        "current_load_percent": 61.0,
+        "peak_load_percent": 84.7,
+        "historical_failure_rate_percent": 11.4,
+        "transformer_age_years": 22.3
+      },
+      "water_system": {
+        "pressure_variance_percent": 11.7,
+        "pipeline_age_years": 20.5,
+        "recent_repairs_last_30_days": 0
+      },
+      "traffic_system": {
+        "congestion_index": 48.1,
+        "signal_failure_reports_last_7_days": 2
+      },
+      "population_density_per_km2": 11200,
+      "scenario_type": "baseline"
+    },
+    "assessment": {
+      "city": "Metrovale",
+      "timestamp": "2026-02-25 18:56:55.161734+00:00",
+      "overall_risk": {
+        "score": 51.71,
+        "level": "MODERATE",
+        "24_hour_outlook": "Elevated monitoring required in next 24 hours, centered on transformer overload, power grid.",
+        "72_hour_projection": "Stable-to-elevated trajectory with projected score 54.7 (MODERATE) by 72 hours based on current stress indicators."
+      },
+      "systems": {
+        "power_grid": {
+          "risk_score": 62.4,
+          "risk_level": "MODERATE",
+          "primary_drivers": [
+            "transformer_age_years>20"
+          ],
+          "compound_flags": []
+        },
+        "transformer_overload": {
+          "risk_score": 77.86,
+          "risk_level": "HIGH",
+          "primary_drivers": [
+            "transformer_age_years>20"
+          ],
+          "compound_flags": []
+        },
+        "water_pipeline": {
+          "risk_score": 15.29,
+          "risk_level": "LOW",
+          "primary_drivers": [
+            "baseline_hydraulic_and_maintenance_profile"
+          ],
+          "compound_flags": []
+        },
+        "traffic_infrastructure": {
+          "risk_score": 46.41,
+          "risk_level": "MODERATE",
+          "primary_drivers": [
+            "population_density_per_km2>10000"
+          ],
+          "compound_flags": []
+        }
+      },
+      "cascading_failure_risks": [
+        "population_density_plus_aging_infrastructure_amplification"
+      ],
+      "priority_intervention_zones": [
+        "Aging transformer corridors where age exceeds 20 years",
+        "Dense districts with overlapping aging power and water assets"
+      ],
+      "executive_summary": "Metrovale is operating at MODERATE infrastructure risk (51.7/100). Primary pressure is in transformer overload (77.9) followed by power grid (62.4). Cascading pathways currently include population_density_plus_aging_infrastructure_amplification. Prioritize preventive actions in the next operational window for these systems.",
+      "confidence_score": 87
+    }
+  },
+  {
+    "input": {
+      "city": "Riverton",
+      "timestamp": "2026-02-25T18:56:55.161734+00:00",
+      "weather": {
+        "temperature_c": 40.2,
+        "humidity_percent": 32.5,
+        "heatwave_alert": true,
+        "rainfall_mm": 6.1
+      },
+      "power_grid": {
+        "current_load_percent": 87.1,
+        "peak_load_percent": 95.0,
+        "historical_failure_rate_percent": 6.4,
+        "transformer_age_years": 17.4
+      },
+      "water_system": {
+        "pressure_variance_percent": 26.2,
+        "pipeline_age_years": 10.2,
+        "recent_repairs_last_30_days": 1
+      },
+      "traffic_system": {
+        "congestion_index": 77.2,
+        "signal_failure_reports_last_7_days": 3
+      },
+      "population_density_per_km2": 8400,
+      "scenario_type": "heatwave"
+    },
+    "assessment": {
+      "city": "Riverton",
+      "timestamp": "2026-02-25 18:56:55.161734+00:00",
+      "overall_risk": {
+        "score": 75.77,
+        "level": "HIGH",
+        "24_hour_outlook": "Pre-failure posture detected; activate standby crews for power grid, transformer overload within 24 hours.",
+        "72_hour_projection": "Escalating trajectory with projected score 89.8 (CRITICAL) by 72 hours based on current stress indicators."
+      },
+      "systems": {
+        "power_grid": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "current_load_percent>85",
+            "peak_load_percent>90",
+            "heatwave_alert=true"
+          ],
+          "compound_flags": [
+            "multi_factor_amplification_15pct",
+            "heatwave_plus_high_load_extra_amplification"
+          ]
+        },
+        "transformer_overload": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "peak_load_percent>90",
+            "current_load_percent>85",
+            "heatwave_alert=true"
+          ],
+          "compound_flags": [
+            "overload_intersection_amplification_15pct"
+          ]
+        },
+        "water_pipeline": {
+          "risk_score": 17.27,
+          "risk_level": "LOW",
+          "primary_drivers": [
+            "baseline_hydraulic_and_maintenance_profile"
+          ],
+          "compound_flags": []
+        },
+        "traffic_infrastructure": {
+          "risk_score": 71.38,
+          "risk_level": "HIGH",
+          "primary_drivers": [
+            "congestion_index>75"
+          ],
+          "compound_flags": [
+            "cascading_adjustment_plus_9.1"
+          ]
+        }
+      },
+      "cascading_failure_risks": [
+        "power_to_traffic_signal_dependency (impact +9.1 traffic risk)",
+        "extreme_congestion_emergency_response_delay"
+      ],
+      "priority_intervention_zones": [
+        "Substation clusters with sustained grid load above 85%",
+        "Aging transformer corridors where age exceeds 20 years",
+        "High-congestion junctions with repeated signal failures"
+      ],
+      "executive_summary": "Riverton is operating at HIGH infrastructure risk (75.8/100). Primary pressure is in power grid (100.0) followed by transformer overload (100.0). Cascading pathways currently include power_to_traffic_signal_dependency (impact +9.1 traffic risk); extreme_congestion_emergency_response_delay. Prioritize preventive actions in the next operational window for these systems.",
+      "confidence_score": 95
+    }
+  },
+  {
+    "input": {
+      "city": "Northbridge",
+      "timestamp": "2026-02-25T18:56:55.161734+00:00",
+      "weather": {
+        "temperature_c": 25.2,
+        "humidity_percent": 45.6,
+        "heatwave_alert": false,
+        "rainfall_mm": 0.9
+      },
+      "power_grid": {
+        "current_load_percent": 67.4,
+        "peak_load_percent": 72.5,
+        "historical_failure_rate_percent": 14.1,
+        "transformer_age_years": 9.3
+      },
+      "water_system": {
+        "pressure_variance_percent": 44.7,
+        "pipeline_age_years": 25.7,
+        "recent_repairs_last_30_days": 2
+      },
+      "traffic_system": {
+        "congestion_index": 89.9,
+        "signal_failure_reports_last_7_days": 10
+      },
+      "population_density_per_km2": 11952.1,
+      "scenario_type": "high_density"
+    },
+    "assessment": {
+      "city": "Northbridge",
+      "timestamp": "2026-02-25 18:56:55.161734+00:00",
+      "overall_risk": {
+        "score": 70.68,
+        "level": "HIGH",
+        "24_hour_outlook": "Pre-failure posture detected; activate standby crews for traffic infrastructure, transformer overload within 24 hours.",
+        "72_hour_projection": "Escalating trajectory with projected score 80.7 (HIGH) by 72 hours based on current stress indicators."
+      },
+      "systems": {
+        "power_grid": {
+          "risk_score": 51.86,
+          "risk_level": "MODERATE",
+          "primary_drivers": [
+            "baseline_load_and_asset_profile"
+          ],
+          "compound_flags": []
+        },
+        "transformer_overload": {
+          "risk_score": 59.73,
+          "risk_level": "MODERATE",
+          "primary_drivers": [
+            "baseline_transformer_load_profile"
+          ],
+          "compound_flags": []
+        },
+        "water_pipeline": {
+          "risk_score": 55.15,
+          "risk_level": "MODERATE",
+          "primary_drivers": [
+            "pressure_variance_percent>30",
+            "pipeline_age_years>25"
+          ],
+          "compound_flags": [
+            "water_stress_compound_amplification_10pct"
+          ]
+        },
+        "traffic_infrastructure": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "congestion_index>75",
+            "signal_failure_reports_last_7_days>5",
+            "population_density_per_km2>10000"
+          ],
+          "compound_flags": [
+            "traffic_compound_amplification_15pct"
+          ]
+        }
+      },
+      "cascading_failure_risks": [
+        "extreme_congestion_emergency_response_delay",
+        "population_density_plus_aging_infrastructure_amplification"
+      ],
+      "priority_intervention_zones": [
+        "High-congestion junctions with repeated signal failures",
+        "Dense districts with overlapping aging power and water assets"
+      ],
+      "executive_summary": "Northbridge is operating at HIGH infrastructure risk (70.7/100). Primary pressure is in traffic infrastructure (100.0) followed by transformer overload (59.7). Cascading pathways currently include extreme_congestion_emergency_response_delay; population_density_plus_aging_infrastructure_amplification. Prioritize preventive actions in the next operational window for these systems.",
+      "confidence_score": 95
+    }
+  },
+  {
+    "input": {
+      "city": "Sunport",
+      "timestamp": "2026-02-25T18:56:55.161734+00:00",
+      "weather": {
+        "temperature_c": 32.8,
+        "humidity_percent": 69.7,
+        "heatwave_alert": false,
+        "rainfall_mm": 55.9
+      },
+      "power_grid": {
+        "current_load_percent": 67.2,
+        "peak_load_percent": 86.7,
+        "historical_failure_rate_percent": 21.9,
+        "transformer_age_years": 25.7
+      },
+      "water_system": {
+        "pressure_variance_percent": 59.7,
+        "pipeline_age_years": 27.5,
+        "recent_repairs_last_30_days": 7
+      },
+      "traffic_system": {
+        "congestion_index": 65.1,
+        "signal_failure_reports_last_7_days": 2
+      },
+      "population_density_per_km2": 13200,
+      "scenario_type": "failure_event"
+    },
+    "assessment": {
+      "city": "Sunport",
+      "timestamp": "2026-02-25 18:56:55.161734+00:00",
+      "overall_risk": {
+        "score": 98.47,
+        "level": "CRITICAL",
+        "24_hour_outlook": "Critical posture; initiate emergency response and staged load reduction for water pipeline, transformer overload immediately.",
+        "72_hour_projection": "Stable-to-elevated trajectory with projected score 100.0 (CRITICAL) by 72 hours based on current stress indicators."
+      },
+      "systems": {
+        "power_grid": {
+          "risk_score": 87.9,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "transformer_age_years>20",
+            "historical_failure_rate_percent>15"
+          ],
+          "compound_flags": [
+            "multi_factor_amplification_10pct"
+          ]
+        },
+        "transformer_overload": {
+          "risk_score": 98.57,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "transformer_age_years>20",
+            "historical_failure_rate_percent>15"
+          ],
+          "compound_flags": [
+            "overload_intersection_amplification_10pct"
+          ]
+        },
+        "water_pipeline": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "pressure_variance_percent>30",
+            "pipeline_age_years>25",
+            "rainfall_mm>40",
+            "recent_repairs_last_30_days>3"
+          ],
+          "compound_flags": [
+            "water_stress_compound_amplification_15pct",
+            "storm_pressure_instability_intersection"
+          ]
+        },
+        "traffic_infrastructure": {
+          "risk_score": 71.8,
+          "risk_level": "HIGH",
+          "primary_drivers": [
+            "population_density_per_km2>10000"
+          ],
+          "compound_flags": [
+            "cascading_adjustment_plus_15.0"
+          ]
+        }
+      },
+      "cascading_failure_risks": [
+        "power_to_traffic_signal_dependency (impact +7.6 traffic risk)",
+        "water_burst_to_traffic_disruption_in_dense_zones (impact +7.4 traffic risk)",
+        "population_density_plus_aging_infrastructure_amplification"
+      ],
+      "priority_intervention_zones": [
+        "Substation clusters with sustained grid load above 85%",
+        "Aging transformer corridors where age exceeds 20 years",
+        "Legacy water mains with pressure variance above 30%",
+        "High-congestion junctions with repeated signal failures",
+        "Dense districts with overlapping aging power and water assets"
+      ],
+      "executive_summary": "Sunport is operating at CRITICAL infrastructure risk (98.5/100). Primary pressure is in water pipeline (100.0) followed by transformer overload (98.6). Cascading pathways currently include power_to_traffic_signal_dependency (impact +7.6 traffic risk); water_burst_to_traffic_disruption_in_dense_zones (impact +7.4 traffic risk). Prioritize preventive actions in the next operational window for these systems.",
+      "confidence_score": 95
+    }
+  },
+  {
+    "input": {
+      "city": "Crestfield",
+      "timestamp": "2026-02-25T18:56:55.161734+00:00",
+      "weather": {
+        "temperature_c": 45.0,
+        "humidity_percent": 36.0,
+        "heatwave_alert": true,
+        "rainfall_mm": 57.0
+      },
+      "power_grid": {
+        "current_load_percent": 90.4,
+        "peak_load_percent": 99.3,
+        "historical_failure_rate_percent": 24.7,
+        "transformer_age_years": 29.1
+      },
+      "water_system": {
+        "pressure_variance_percent": 36.6,
+        "pipeline_age_years": 16.7,
+        "recent_repairs_last_30_days": 8
+      },
+      "traffic_system": {
+        "congestion_index": 82.4,
+        "signal_failure_reports_last_7_days": 14
+      },
+      "population_density_per_km2": 13221.7,
+      "scenario_type": "compound"
+    },
+    "assessment": {
+      "city": "Crestfield",
+      "timestamp": "2026-02-25 18:56:55.161734+00:00",
+      "overall_risk": {
+        "score": 100.0,
+        "level": "CRITICAL",
+        "24_hour_outlook": "Critical posture; initiate emergency response and staged load reduction for power grid, transformer overload immediately.",
+        "72_hour_projection": "Stable-to-elevated trajectory with projected score 100.0 (CRITICAL) by 72 hours based on current stress indicators."
+      },
+      "systems": {
+        "power_grid": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "current_load_percent>85",
+            "peak_load_percent>90",
+            "transformer_age_years>20",
+            "heatwave_alert=true",
+            "historical_failure_rate_percent>15"
+          ],
+          "compound_flags": [
+            "multi_factor_amplification_15pct",
+            "heatwave_plus_high_load_extra_amplification"
+          ]
+        },
+        "transformer_overload": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "peak_load_percent>90",
+            "current_load_percent>85",
+            "transformer_age_years>20",
+            "historical_failure_rate_percent>15",
+            "heatwave_alert=true"
+          ],
+          "compound_flags": [
+            "overload_intersection_amplification_15pct",
+            "aging_assets_under_peak_demand"
+          ]
+        },
+        "water_pipeline": {
+          "risk_score": 83.77,
+          "risk_level": "HIGH",
+          "primary_drivers": [
+            "pressure_variance_percent>30",
+            "rainfall_mm>40",
+            "recent_repairs_last_30_days>3"
+          ],
+          "compound_flags": [
+            "water_stress_compound_amplification_15pct",
+            "storm_pressure_instability_intersection"
+          ]
+        },
+        "traffic_infrastructure": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "congestion_index>75",
+            "signal_failure_reports_last_7_days>5",
+            "population_density_per_km2>10000"
+          ],
+          "compound_flags": [
+            "traffic_compound_amplification_15pct",
+            "cascading_adjustment_plus_14.9"
+          ]
+        }
+      },
+      "cascading_failure_risks": [
+        "power_to_traffic_signal_dependency (impact +9.1 traffic risk)",
+        "water_burst_to_traffic_disruption_in_dense_zones (impact +5.8 traffic risk)",
+        "extreme_congestion_emergency_response_delay",
+        "population_density_plus_aging_infrastructure_amplification"
+      ],
+      "priority_intervention_zones": [
+        "Substation clusters with sustained grid load above 85%",
+        "Aging transformer corridors where age exceeds 20 years",
+        "Legacy water mains with pressure variance above 30%",
+        "High-congestion junctions with repeated signal failures",
+        "Dense districts with overlapping aging power and water assets"
+      ],
+      "executive_summary": "Crestfield is operating at CRITICAL infrastructure risk (100.0/100). Primary pressure is in power grid (100.0) followed by transformer overload (100.0). Cascading pathways currently include power_to_traffic_signal_dependency (impact +9.1 traffic risk); water_burst_to_traffic_disruption_in_dense_zones (impact +5.8 traffic risk). Prioritize preventive actions in the next operational window for these systems.",
+      "confidence_score": 95
+    }
+  },
+  {
+    "input": {
+      "city": "Lakehurst",
+      "timestamp": "2026-02-25T18:56:55.161734+00:00",
+      "weather": {
+        "temperature_c": 35.0,
+        "humidity_percent": 55.4,
+        "heatwave_alert": false,
+        "rainfall_mm": 1.8
+      },
+      "power_grid": {
+        "current_load_percent": 56.3,
+        "peak_load_percent": 72.2,
+        "historical_failure_rate_percent": 10.9,
+        "transformer_age_years": 20.7
+      },
+      "water_system": {
+        "pressure_variance_percent": 18.4,
+        "pipeline_age_years": 11.6,
+        "recent_repairs_last_30_days": 3
+      },
+      "traffic_system": {
+        "congestion_index": 64.7,
+        "signal_failure_reports_last_7_days": 4
+      },
+      "population_density_per_km2": 10100,
+      "scenario_type": "baseline"
+    },
+    "assessment": {
+      "city": "Lakehurst",
+      "timestamp": "2026-02-25 18:56:55.161734+00:00",
+      "overall_risk": {
+        "score": 51.75,
+        "level": "MODERATE",
+        "24_hour_outlook": "Elevated monitoring required in next 24 hours, centered on transformer overload, traffic infrastructure.",
+        "72_hour_projection": "Stable-to-elevated trajectory with projected score 54.7 (MODERATE) by 72 hours based on current stress indicators."
+      },
+      "systems": {
+        "power_grid": {
+          "risk_score": 57.06,
+          "risk_level": "MODERATE",
+          "primary_drivers": [
+            "transformer_age_years>20"
+          ],
+          "compound_flags": []
+        },
+        "transformer_overload": {
+          "risk_score": 70.46,
+          "risk_level": "HIGH",
+          "primary_drivers": [
+            "transformer_age_years>20"
+          ],
+          "compound_flags": []
+        },
+        "water_pipeline": {
+          "risk_score": 16.73,
+          "risk_level": "LOW",
+          "primary_drivers": [
+            "baseline_hydraulic_and_maintenance_profile"
+          ],
+          "compound_flags": []
+        },
+        "traffic_infrastructure": {
+          "risk_score": 57.17,
+          "risk_level": "MODERATE",
+          "primary_drivers": [
+            "population_density_per_km2>10000"
+          ],
+          "compound_flags": []
+        }
+      },
+      "cascading_failure_risks": [
+        "population_density_plus_aging_infrastructure_amplification"
+      ],
+      "priority_intervention_zones": [
+        "Aging transformer corridors where age exceeds 20 years",
+        "Dense districts with overlapping aging power and water assets"
+      ],
+      "executive_summary": "Lakehurst is operating at MODERATE infrastructure risk (51.7/100). Primary pressure is in transformer overload (70.5) followed by traffic infrastructure (57.2). Cascading pathways currently include population_density_plus_aging_infrastructure_amplification. Prioritize preventive actions in the next operational window for these systems.",
+      "confidence_score": 95
+    }
+  },
+  {
+    "input": {
+      "city": "Bayhaven",
+      "timestamp": "2026-02-25T18:56:55.161734+00:00",
+      "weather": {
+        "temperature_c": 41.6,
+        "humidity_percent": 58.4,
+        "heatwave_alert": true,
+        "rainfall_mm": 7.0
+      },
+      "power_grid": {
+        "current_load_percent": 88.9,
+        "peak_load_percent": 96.0,
+        "historical_failure_rate_percent": 11.5,
+        "transformer_age_years": 16.6
+      },
+      "water_system": {
+        "pressure_variance_percent": 15.3,
+        "pipeline_age_years": 26.0,
+        "recent_repairs_last_30_days": 0
+      },
+      "traffic_system": {
+        "congestion_index": 73.6,
+        "signal_failure_reports_last_7_days": 2
+      },
+      "population_density_per_km2": 14500,
+      "scenario_type": "heatwave"
+    },
+    "assessment": {
+      "city": "Bayhaven",
+      "timestamp": "2026-02-25 18:56:55.161734+00:00",
+      "overall_risk": {
+        "score": 80.98,
+        "level": "HIGH",
+        "24_hour_outlook": "Pre-failure posture detected; activate standby crews for power grid, transformer overload within 24 hours.",
+        "72_hour_projection": "Escalating trajectory with projected score 95.0 (CRITICAL) by 72 hours based on current stress indicators."
+      },
+      "systems": {
+        "power_grid": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "current_load_percent>85",
+            "peak_load_percent>90",
+            "heatwave_alert=true"
+          ],
+          "compound_flags": [
+            "multi_factor_amplification_15pct",
+            "heatwave_plus_high_load_extra_amplification"
+          ]
+        },
+        "transformer_overload": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "peak_load_percent>90",
+            "current_load_percent>85",
+            "heatwave_alert=true"
+          ],
+          "compound_flags": [
+            "overload_intersection_amplification_15pct"
+          ]
+        },
+        "water_pipeline": {
+          "risk_score": 28.57,
+          "risk_level": "LOW",
+          "primary_drivers": [
+            "pipeline_age_years>25"
+          ],
+          "compound_flags": []
+        },
+        "traffic_infrastructure": {
+          "risk_score": 71.36,
+          "risk_level": "HIGH",
+          "primary_drivers": [
+            "population_density_per_km2>10000"
+          ],
+          "compound_flags": [
+            "cascading_adjustment_plus_9.1"
+          ]
+        }
+      },
+      "cascading_failure_risks": [
+        "power_to_traffic_signal_dependency (impact +9.1 traffic risk)",
+        "population_density_plus_aging_infrastructure_amplification"
+      ],
+      "priority_intervention_zones": [
+        "Substation clusters with sustained grid load above 85%",
+        "Aging transformer corridors where age exceeds 20 years",
+        "High-congestion junctions with repeated signal failures",
+        "Dense districts with overlapping aging power and water assets"
+      ],
+      "executive_summary": "Bayhaven is operating at HIGH infrastructure risk (81.0/100). Primary pressure is in power grid (100.0) followed by transformer overload (100.0). Cascading pathways currently include power_to_traffic_signal_dependency (impact +9.1 traffic risk); population_density_plus_aging_infrastructure_amplification. Prioritize preventive actions in the next operational window for these systems.",
+      "confidence_score": 95
+    }
+  },
+  {
+    "input": {
+      "city": "Ironwood",
+      "timestamp": "2026-02-25T18:56:55.161734+00:00",
+      "weather": {
+        "temperature_c": 33.7,
+        "humidity_percent": 69.8,
+        "heatwave_alert": false,
+        "rainfall_mm": 6.0
+      },
+      "power_grid": {
+        "current_load_percent": 72.3,
+        "peak_load_percent": 82.2,
+        "historical_failure_rate_percent": 5.7,
+        "transformer_age_years": 20.2
+      },
+      "water_system": {
+        "pressure_variance_percent": 42.2,
+        "pipeline_age_years": 29.5,
+        "recent_repairs_last_30_days": 4
+      },
+      "traffic_system": {
+        "congestion_index": 78.4,
+        "signal_failure_reports_last_7_days": 11
+      },
+      "population_density_per_km2": 13607.0,
+      "scenario_type": "high_density"
+    },
+    "assessment": {
+      "city": "Ironwood",
+      "timestamp": "2026-02-25 18:56:55.161734+00:00",
+      "overall_risk": {
+        "score": 83.68,
+        "level": "HIGH",
+        "24_hour_outlook": "Pre-failure posture detected; activate standby crews for traffic infrastructure, transformer overload within 24 hours.",
+        "72_hour_projection": "Escalating trajectory with projected score 95.7 (CRITICAL) by 72 hours based on current stress indicators."
+      },
+      "systems": {
+        "power_grid": {
+          "risk_score": 60.41,
+          "risk_level": "MODERATE",
+          "primary_drivers": [
+            "transformer_age_years>20"
+          ],
+          "compound_flags": []
+        },
+        "transformer_overload": {
+          "risk_score": 77.96,
+          "risk_level": "HIGH",
+          "primary_drivers": [
+            "transformer_age_years>20"
+          ],
+          "compound_flags": []
+        },
+        "water_pipeline": {
+          "risk_score": 71.54,
+          "risk_level": "HIGH",
+          "primary_drivers": [
+            "pressure_variance_percent>30",
+            "pipeline_age_years>25",
+            "recent_repairs_last_30_days>3"
+          ],
+          "compound_flags": [
+            "water_stress_compound_amplification_15pct"
+          ]
+        },
+        "traffic_infrastructure": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "congestion_index>75",
+            "signal_failure_reports_last_7_days>5",
+            "population_density_per_km2>10000"
+          ],
+          "compound_flags": [
+            "traffic_compound_amplification_15pct",
+            "cascading_adjustment_plus_4.6"
+          ]
+        }
+      },
+      "cascading_failure_risks": [
+        "water_burst_to_traffic_disruption_in_dense_zones (impact +4.6 traffic risk)",
+        "extreme_congestion_emergency_response_delay",
+        "population_density_plus_aging_infrastructure_amplification"
+      ],
+      "priority_intervention_zones": [
+        "Aging transformer corridors where age exceeds 20 years",
+        "Legacy water mains with pressure variance above 30%",
+        "High-congestion junctions with repeated signal failures",
+        "Dense districts with overlapping aging power and water assets"
+      ],
+      "executive_summary": "Ironwood is operating at HIGH infrastructure risk (83.7/100). Primary pressure is in traffic infrastructure (100.0) followed by transformer overload (78.0). Cascading pathways currently include water_burst_to_traffic_disruption_in_dense_zones (impact +4.6 traffic risk); extreme_congestion_emergency_response_delay. Prioritize preventive actions in the next operational window for these systems.",
+      "confidence_score": 95
+    }
+  },
+  {
+    "input": {
+      "city": "Stonegate",
+      "timestamp": "2026-02-25T18:56:55.161734+00:00",
+      "weather": {
+        "temperature_c": 32.5,
+        "humidity_percent": 47.3,
+        "heatwave_alert": false,
+        "rainfall_mm": 83.0
+      },
+      "power_grid": {
+        "current_load_percent": 78.7,
+        "peak_load_percent": 88.9,
+        "historical_failure_rate_percent": 27.3,
+        "transformer_age_years": 24.1
+      },
+      "water_system": {
+        "pressure_variance_percent": 42.7,
+        "pipeline_age_years": 29.0,
+        "recent_repairs_last_30_days": 8
+      },
+      "traffic_system": {
+        "congestion_index": 49.2,
+        "signal_failure_reports_last_7_days": 4
+      },
+      "population_density_per_km2": 11700,
+      "scenario_type": "failure_event"
+    },
+    "assessment": {
+      "city": "Stonegate",
+      "timestamp": "2026-02-25 18:56:55.161734+00:00",
+      "overall_risk": {
+        "score": 99.77,
+        "level": "CRITICAL",
+        "24_hour_outlook": "Critical posture; initiate emergency response and staged load reduction for transformer overload, water pipeline immediately.",
+        "72_hour_projection": "Stable-to-elevated trajectory with projected score 100.0 (CRITICAL) by 72 hours based on current stress indicators."
+      },
+      "systems": {
+        "power_grid": {
+          "risk_score": 94.15,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "transformer_age_years>20",
+            "historical_failure_rate_percent>15"
+          ],
+          "compound_flags": [
+            "multi_factor_amplification_10pct"
+          ]
+        },
+        "transformer_overload": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "transformer_age_years>20",
+            "historical_failure_rate_percent>15"
+          ],
+          "compound_flags": [
+            "overload_intersection_amplification_10pct"
+          ]
+        },
+        "water_pipeline": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "pressure_variance_percent>30",
+            "pipeline_age_years>25",
+            "rainfall_mm>40",
+            "recent_repairs_last_30_days>3"
+          ],
+          "compound_flags": [
+            "water_stress_compound_amplification_15pct",
+            "storm_pressure_instability_intersection"
+          ]
+        },
+        "traffic_infrastructure": {
+          "risk_score": 67.26,
+          "risk_level": "HIGH",
+          "primary_drivers": [
+            "population_density_per_km2>10000"
+          ],
+          "compound_flags": [
+            "cascading_adjustment_plus_15.8"
+          ]
+        }
+      },
+      "cascading_failure_risks": [
+        "power_to_traffic_signal_dependency (impact +8.4 traffic risk)",
+        "water_burst_to_traffic_disruption_in_dense_zones (impact +7.4 traffic risk)",
+        "population_density_plus_aging_infrastructure_amplification"
+      ],
+      "priority_intervention_zones": [
+        "Substation clusters with sustained grid load above 85%",
+        "Aging transformer corridors where age exceeds 20 years",
+        "Legacy water mains with pressure variance above 30%",
+        "High-congestion junctions with repeated signal failures",
+        "Dense districts with overlapping aging power and water assets"
+      ],
+      "executive_summary": "Stonegate is operating at CRITICAL infrastructure risk (99.8/100). Primary pressure is in transformer overload (100.0) followed by water pipeline (100.0). Cascading pathways currently include power_to_traffic_signal_dependency (impact +8.4 traffic risk); water_burst_to_traffic_disruption_in_dense_zones (impact +7.4 traffic risk). Prioritize preventive actions in the next operational window for these systems.",
+      "confidence_score": 95
+    }
+  },
+  {
+    "input": {
+      "city": "Hillford",
+      "timestamp": "2026-02-25T18:56:55.161734+00:00",
+      "weather": {
+        "temperature_c": 40.7,
+        "humidity_percent": 45.6,
+        "heatwave_alert": true,
+        "rainfall_mm": 64.7
+      },
+      "power_grid": {
+        "current_load_percent": 88.4,
+        "peak_load_percent": 92.6,
+        "historical_failure_rate_percent": 18.1,
+        "transformer_age_years": 33.7
+      },
+      "water_system": {
+        "pressure_variance_percent": 51.7,
+        "pipeline_age_years": 22.9,
+        "recent_repairs_last_30_days": 5
+      },
+      "traffic_system": {
+        "congestion_index": 94.3,
+        "signal_failure_reports_last_7_days": 11
+      },
+      "population_density_per_km2": 12988.1,
+      "scenario_type": "compound"
+    },
+    "assessment": {
+      "city": "Hillford",
+      "timestamp": "2026-02-25 18:56:55.161734+00:00",
+      "overall_risk": {
+        "score": 100.0,
+        "level": "CRITICAL",
+        "24_hour_outlook": "Critical posture; initiate emergency response and staged load reduction for power grid, transformer overload immediately.",
+        "72_hour_projection": "Stable-to-elevated trajectory with projected score 100.0 (CRITICAL) by 72 hours based on current stress indicators."
+      },
+      "systems": {
+        "power_grid": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "current_load_percent>85",
+            "peak_load_percent>90",
+            "transformer_age_years>20",
+            "heatwave_alert=true",
+            "historical_failure_rate_percent>15"
+          ],
+          "compound_flags": [
+            "multi_factor_amplification_15pct",
+            "heatwave_plus_high_load_extra_amplification"
+          ]
+        },
+        "transformer_overload": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "peak_load_percent>90",
+            "current_load_percent>85",
+            "transformer_age_years>20",
+            "historical_failure_rate_percent>15",
+            "heatwave_alert=true"
+          ],
+          "compound_flags": [
+            "overload_intersection_amplification_15pct",
+            "aging_assets_under_peak_demand"
+          ]
+        },
+        "water_pipeline": {
+          "risk_score": 90.95,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "pressure_variance_percent>30",
+            "rainfall_mm>40",
+            "recent_repairs_last_30_days>3"
+          ],
+          "compound_flags": [
+            "water_stress_compound_amplification_15pct",
+            "storm_pressure_instability_intersection"
+          ]
+        },
+        "traffic_infrastructure": {
+          "risk_score": 100.0,
+          "risk_level": "CRITICAL",
+          "primary_drivers": [
+            "congestion_index>75",
+            "signal_failure_reports_last_7_days>5",
+            "population_density_per_km2>10000"
+          ],
+          "compound_flags": [
+            "traffic_compound_amplification_15pct",
+            "cascading_adjustment_plus_15.6"
+          ]
+        }
+      },
+      "cascading_failure_risks": [
+        "power_to_traffic_signal_dependency (impact +9.1 traffic risk)",
+        "water_burst_to_traffic_disruption_in_dense_zones (impact +6.5 traffic risk)",
+        "extreme_congestion_emergency_response_delay",
+        "population_density_plus_aging_infrastructure_amplification"
+      ],
+      "priority_intervention_zones": [
+        "Substation clusters with sustained grid load above 85%",
+        "Aging transformer corridors where age exceeds 20 years",
+        "Legacy water mains with pressure variance above 30%",
+        "High-congestion junctions with repeated signal failures",
+        "Dense districts with overlapping aging power and water assets"
+      ],
+      "executive_summary": "Hillford is operating at CRITICAL infrastructure risk (100.0/100). Primary pressure is in power grid (100.0) followed by transformer overload (100.0). Cascading pathways currently include power_to_traffic_signal_dependency (impact +9.1 traffic risk); water_burst_to_traffic_disruption_in_dense_zones (impact +6.5 traffic risk). Prioritize preventive actions in the next operational window for these systems.",
+      "confidence_score": 95
+    }
+  }
+]
