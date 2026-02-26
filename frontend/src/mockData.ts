@@ -112,5 +112,31 @@ export const mockRiskResponse: RiskResponse = {
       random_baseline_pr_auc: 0.222,
       uplift_vs_baseline: 0.135
     }
+  },
+  impact_model: {
+    estimated_cost_avoided_usd_72h: 1275600,
+    estimated_outage_hours_avoided_72h: 13.2,
+    estimated_response_time_gain_percent: 27.5,
+    assumptions: [
+      "Impact estimates are heuristic planning values, not audited financial statements.",
+      "Service interruption cost per hour scales with density and critical infrastructure overlap.",
+      "Estimated gains assume pre-emptive intervention is executed within 24-hour recommendations."
+    ]
+  },
+  external_signal: {
+    source: "open-meteo.com",
+    signal_type: "live_weather_crosscheck",
+    status: "ok",
+    retrieved_at: "2026-02-26T12:05:00Z",
+    details: {
+      city: "Metrovale",
+      external_temperature_c: 39.4,
+      external_precipitation_mm: 1.6,
+      external_wind_speed_kmh: 24.5,
+      temperature_delta_c: -1.9,
+      rainfall_delta_mm: -10.8,
+      weather_anomaly_flag: false
+    },
+    influence_note: "External weather signal aligned with submitted telemetry profile."
   }
 };

@@ -5,6 +5,7 @@ from typing import Any
 
 from .ai_reasoning import generate_executive_summary
 from .models import (
+    ImpactModel,
     OverallRisk,
     RiskAssessmentRequest,
     RiskAssessmentResponse,
@@ -525,6 +526,47 @@ def run_risk_assessment(payload: RiskAssessmentRequest) -> RiskAssessmentRespons
         priority_intervention_zones=priority_zones,
         executive_summary=executive_summary,
         confidence_score=confidence_score,
+    )
+
+
+def estimate_impact_model(
+    payload: RiskAssessmentRequest,
+    assessment: RiskAssessmentResponse,
+) -> ImpactModel:
+    density = _num(payload.population_density_per_km2)
+    density_factor = max(0.6, min(2.5, density / 10000.0 if density > 0 else 1.0))
+    cascade_count = len(assessment.cascading_failure_risks)
+    cascade_factor = 1.0 + min(0.6, 0.12 * cascade_count)
+
+    power = float(assessment.systems["power_grid"].risk_score)
+    transformer = float(assessment.systems["transformer_overload"].risk_score)
+    water = float(assessment.systems["water_pipeline"].risk_score)
+    traffic = float(assessment.systems["traffic_infrastructure"].risk_score)
+    weighted_pressure = 0.34 * power + 0.16 * transformer + 0.24 * water + 0.26 * traffic
+
+    expected_disruption_hours = (weighted_pressure / 100.0) * (6.5 * density_factor) * cascade_factor
+    intervention_capture = 0.22 + 0.28 * (float(assessment.confidence_score) / 100.0)
+    outage_hours_avoided = expected_disruption_hours * intervention_capture
+
+    service_cost_per_hour = 45000.0 * density_factor
+    cost_avoided = outage_hours_avoided * service_cost_per_hour
+
+    response_time_gain = min(
+        45.0,
+        5.0 + (0.21 * traffic) + (1.8 * cascade_count),
+    )
+
+    assumptions = [
+        "Impact estimates are heuristic planning values, not audited financial statements.",
+        "Service interruption cost per hour scales with density and critical infrastructure overlap.",
+        "Estimated gains assume pre-emptive intervention is executed within 24-hour recommendations.",
+    ]
+
+    return ImpactModel(
+        estimated_cost_avoided_usd_72h=round(max(0.0, cost_avoided), 2),
+        estimated_outage_hours_avoided_72h=round(max(0.0, outage_hours_avoided), 2),
+        estimated_response_time_gain_percent=round(max(0.0, response_time_gain), 2),
+        assumptions=assumptions,
     )
 
 

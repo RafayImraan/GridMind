@@ -77,6 +77,20 @@ On success, response includes header:
   "priority_intervention_zones": ["string"],
   "executive_summary": "string",
   "confidence_score": 0,
+  "impact_model": {
+    "estimated_cost_avoided_usd_72h": 0,
+    "estimated_outage_hours_avoided_72h": 0,
+    "estimated_response_time_gain_percent": 0,
+    "assumptions": ["string"]
+  },
+  "external_signal": {
+    "source": "open-meteo.com",
+    "signal_type": "live_weather_crosscheck",
+    "status": "ok|unsupported_city|fetch_failed",
+    "retrieved_at": "ISO-8601 datetime",
+    "details": {},
+    "influence_note": "string"
+  },
   "ml_insights": {
     "top_features": [
       {

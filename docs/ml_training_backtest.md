@@ -127,6 +127,10 @@ Primary metrics to optimize:
 - `brier` and `ece_10_bins` (probability calibration)
 - `f1` (decision threshold performance)
 
+Recommended for stronger stability:
+
+- Use `--min-train-ratio 0.5 --test-ratio 0.1 --step-ratio 0.1` to get more rolling windows than coarse splits.
+
 ## 7) Activate ML Inference in API
 
 Default model path:
@@ -171,3 +175,46 @@ Example from current bundle:
 - `uplift_vs_baseline ~= +0.135`
 
 This states predictive signal quality honestly under severe class imbalance and avoids misleading high-accuracy narratives.
+
+## 10) Baseline Comparison (Rule vs ML vs Hybrid)
+
+Generate a direct comparison artifact:
+
+```bash
+cd backend
+python -m ml.evaluate_baselines --data C:\Users\HomePC\Documents\gridmind\backend\models\real_world_labeled.csv --output C:\Users\HomePC\Documents\gridmind\backend\models\gridmind_baseline_comparison.json --holdout-fraction 0.2
+```
+
+Output:
+
+- `backend/models/gridmind_baseline_comparison.json`
+
+Report contents:
+
+- Per-target class prevalence and random PR-AUC baseline
+- Per-model (`rule_only`, `ml_only`, `hybrid`) PR-AUC / ROC-AUC / ECE / Brier
+- Macro PR-AUC and uplift vs random baseline
+- Reliability-bin data (10 bins) for calibration plots
+
+Fast/default runtime behavior:
+
+- Uses holdout downsampling (`stride=15`, `max_eval_rows=1200`) for hackathon-speed execution.
+- Use `--stride 1 --max-eval-rows 0` for full holdout evaluation (slower).
+
+Blend weight note:
+
+- Current blend weight is derived from holdout macro quality in training (`recommended_ml_blend_weight` in bundle global metrics).
+
+## 11) Generate Visual Evidence Artifacts
+
+```bash
+cd backend
+python -m ml.generate_visual_artifacts --baseline C:\Users\HomePC\Documents\gridmind\backend\models\gridmind_baseline_comparison.json --backtest C:\Users\HomePC\Documents\gridmind\backend\models\gridmind_realworld_backtest.json --output-dir C:\Users\HomePC\Documents\gridmind\docs\assets
+```
+
+Outputs:
+
+- `docs/assets/baseline_macro_pr_auc.svg`
+- `docs/assets/calibration_mean_ece.svg`
+- `docs/assets/calibration_curve_overall_hybrid.svg`
+- `docs/assets/temporal_pr_auc_stability.svg`

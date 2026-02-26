@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, Field
 
@@ -73,6 +73,22 @@ class MLInsights(BaseModel):
     metric_context: Optional[MetricContext] = None
 
 
+class ImpactModel(BaseModel):
+    estimated_cost_avoided_usd_72h: float = Field(..., ge=0)
+    estimated_outage_hours_avoided_72h: float = Field(..., ge=0)
+    estimated_response_time_gain_percent: float = Field(..., ge=0, le=100)
+    assumptions: list[str]
+
+
+class ExternalSignal(BaseModel):
+    source: str
+    signal_type: str
+    status: str
+    retrieved_at: Optional[datetime] = None
+    details: dict[str, Any]
+    influence_note: Optional[str] = None
+
+
 class RiskAssessmentResponse(BaseModel):
     city: str
     timestamp: datetime
@@ -83,6 +99,8 @@ class RiskAssessmentResponse(BaseModel):
     executive_summary: str
     confidence_score: int = Field(..., ge=0, le=100)
     ml_insights: Optional[MLInsights] = None
+    impact_model: Optional[ImpactModel] = None
+    external_signal: Optional[ExternalSignal] = None
 
 
 def classify_risk(score: float) -> str:

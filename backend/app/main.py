@@ -6,16 +6,20 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 
+from .external_signals import fetch_live_weather_signal
 from .ml_runtime import ml_runtime
 from .models import (
+    ExternalSignal,
     FeatureImpact,
+    ImpactModel,
     MLInsights,
     MetricContext,
     RiskAssessmentRequest,
     RiskAssessmentResponse,
+    classify_risk,
 )
 from .persistence import list_recent_assessments, save_assessment
-from .risk_engine import apply_ml_overlay, run_risk_assessment
+from .risk_engine import apply_ml_overlay, estimate_impact_model, run_risk_assessment
 from .simulation import generate_batch
 
 
@@ -66,6 +70,21 @@ def assess_risk(payload: RiskAssessmentRequest, response: Response) -> Any:
                     top_features=[FeatureImpact(**entry) for entry in ml_prediction.top_features],
                     metric_context=metric_context,
                 )
+
+        external_signal = fetch_live_weather_signal(payload)
+        result.external_signal = ExternalSignal(**external_signal.model_dump())
+        anomaly = bool(result.external_signal.details.get("weather_anomaly_flag"))
+        if result.external_signal.status == "ok" and anomaly:
+            boosted = min(100.0, float(result.overall_risk.score) + 1.5)
+            result.overall_risk.score = round(boosted, 2)
+            result.overall_risk.level = classify_risk(boosted)
+            result.executive_summary = (
+                f"{result.executive_summary} Live external weather anomaly signal is active."
+            )
+
+        impact = estimate_impact_model(payload=payload, assessment=result)
+        result.impact_model = ImpactModel(**impact.model_dump())
+
         assessment_id = save_assessment(request_payload=payload, response_payload=result)
         response.headers["X-Assessment-Id"] = assessment_id
         return result.model_dump(by_alias=True)

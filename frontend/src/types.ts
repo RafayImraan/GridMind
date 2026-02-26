@@ -70,4 +70,18 @@ export interface RiskResponse {
     top_features: FeatureImpact[];
     metric_context?: MetricContext | null;
   };
+  impact_model?: {
+    estimated_cost_avoided_usd_72h: number;
+    estimated_outage_hours_avoided_72h: number;
+    estimated_response_time_gain_percent: number;
+    assumptions: string[];
+  };
+  external_signal?: {
+    source: string;
+    signal_type: string;
+    status: "ok" | "unsupported_city" | "fetch_failed" | string;
+    retrieved_at?: string | null;
+    details: Record<string, string | number | boolean | null>;
+    influence_note?: string | null;
+  };
 }

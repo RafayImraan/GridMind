@@ -1,220 +1,259 @@
-# GridMind AI Project Report (Rewritten)
+# GridMind AI Project Report (Judge-Ready Revision)
 
-## 1) Project Snapshot
+## 1) Executive Snapshot
 
 - Project: GridMind AI
-- Scope: Near-term (0-72h) predictive risk for urban critical infrastructure
-- Systems modeled:
-  - Power Grid
-  - Transformer Overload
-  - Water Pipeline
-  - Traffic Signal Infrastructure
-- Core delivery:
-  - Hybrid rule engine + trained ML overlay
-  - Cascading failure modeling
-  - Confidence scoring
-  - Assessment persistence
-  - Enterprise dashboard with explainability
+- Objective: predict 0-72 hour urban infrastructure failure risk
+- Systems covered: power grid, transformer overload, water pipeline, traffic infrastructure
+- Core stack: deterministic risk engine + trained ML overlay + explainability + persistence + enterprise dashboard
 
-## 2) Problem Statement
+## 2) Data Provenance and Authenticity
 
-City operations teams are typically reactive. They receive outages after failures occur, and cross-system dependencies (power to traffic, water to traffic) are under-modeled. GridMind AI shifts operations from reactive maintenance to predictive resilience by scoring system risk, cascade pathways, and 24h/72h escalation outlook from structured telemetry.
+Current `real_telemetry.csv` and `real_incidents.csv` are structured simulation datasets aligned to realistic infrastructure distributions. They are used to validate architecture, risk logic, and model pipeline behavior.
 
-## 3) Solution Overview
+GridMind is intentionally designed for direct replacement with municipal feeds:
 
-GridMind combines deterministic engineering logic with probabilistic ML:
+- SCADA/utility telemetry
+- IoT sensor streams
+- incident ticket/event systems
 
-1. Rule-based scoring for transparent safety behavior.
-2. Compound stress amplification when high-risk factors intersect.
-3. Cascading interaction logic across systems.
-4. ML probability overlay for calibration against labeled history.
-5. Confidence score to represent data completeness and signal quality.
-6. Interpretability output (`ml_insights.top_features`) per assessment.
+This framing is explicit to avoid false claims of live municipal deployment.
 
-## 4) System Architecture
+## 3) Architecture and Runtime Flow
 
-Data flow:
+1. Client submits telemetry to `POST /api/v1/risk/assess`.
+2. Pydantic validates nested fields and ranges.
+3. Rule engine computes system scores, compound flags, cascading risks, and 24h/72h outlook.
+4. ML runtime predicts per-target probabilities from trained bundle.
+5. Rule and ML probabilities are blended into final risk scores.
+6. Live external weather signal (`open-meteo`) cross-check is fetched and attached.
+7. `ml_insights` returns top feature impacts and PR-AUC context.
+8. Impact model returns projected cost avoided, outage-hours reduced, and response-time gain.
+9. Request/response is persisted to `backend/storage/assessments.jsonl`.
 
-1. Client submits telemetry JSON to `POST /api/v1/risk/assess`.
-2. Pydantic validation checks schema and numeric ranges.
-3. Risk engine computes system scores, compound flags, cascade impacts, 24h and 72h outlook.
-4. ML runtime loads trained bundle and predicts per-target 72h probabilities.
-5. Rule scores are blended with ML probabilities using learned blend weight.
-6. Explainability block is generated with top feature impacts and PR-AUC context.
-7. Result is persisted to `backend/storage/assessments.jsonl`.
-8. Response is returned to dashboard and rendered in gauges, tables, cascades, summary, and explainability panel.
+## 4) Risk Engine Transparency
 
-## 5) Backend and API
+Scoring core:
 
-Framework: FastAPI
+- `score_system = clamp(0,100, base_weighted + threshold_bonuses)`
+- compound multiplier:
+  - `1.10` for 2 concurrent high-risk factors
+  - `1.15` for 3+ concurrent high-risk factors
+- cascading multipliers increase citywide risk under inter-system stress
 
-Endpoints:
+Heuristic justification:
 
-- `GET /health`
-- `POST /api/v1/risk/assess`
-- `GET /api/v1/risk/history?limit=20`
-- `GET /api/v1/simulate/scenarios?count=10&seed=42`
-- `GET /api/v1/ml/status`
-- `POST /api/v1/ml/reload`
+- Cascade multipliers are conservative engineering heuristics pending empirical calibration on production telemetry.
 
-Assessment persistence:
+## 5) ML Pipeline Summary
 
-- Storage file: `backend/storage/assessments.jsonl`
-- Header returned on successful assessment: `X-Assessment-Id`
+Artifacts:
 
-## 6) Risk Model Logic (Hybrid)
+- `backend/models/gridmind_ml_bundle_numpy.json`
+- `backend/models/gridmind_ml_training_report.json`
+- `backend/models/gridmind_realworld_backtest.json`
+- `backend/models/gridmind_baseline_comparison.json`
+- `docs/assets/*.svg` evidence charts (benchmark, calibration, stability)
 
-System scoring structure:
+Modeling:
 
-- `score_system = clamp(0, 100, base_weighted + threshold_bonuses)`
-- If 2+ high-risk factors intersect:
-  - multiply by `1.10` (2 factors) or `1.15` (3+ factors)
-- Special amplification:
-  - heatwave + high load adds extra power amplification
+- NumPy logistic regression per target
+- engineered interaction features for load, aging assets, density, rainfall, and congestion
+- blend weight: `0.5929935889167225`
 
-Cascading logic examples:
+Blend-weight method:
 
-- Power high risk increases traffic risk.
-- Water high risk in high-density areas increases traffic disruption risk.
-- Extreme congestion increases emergency response delay risk.
-- Dense + aging infrastructure increases cascade multiplier.
+- `recommended_ml_blend_weight` is derived from holdout macro quality and stored in bundle global metrics.
 
-Overall risk:
+## 6) Validation Results
 
-- `overall = clamp(0, 100, (0.33*power + 0.17*transformer + 0.25*water + 0.25*traffic) * cascade_multiplier)`
+### Holdout Metrics
 
-Projection:
+- Macro PR-AUC: `0.3575`
+- Per-target PR-AUC:
+  - overall `0.7106`
+  - power `0.0741`
+  - transformer `0.1848`
+  - water `0.1496`
+  - traffic `0.6684`
 
-- 24h outlook: operational posture text from current ranking and severity.
-- 72h projection: trend delta from heatwave, load, rainfall, congestion, repair/age intersection.
+### Chronological Backtest (Updated)
 
-Confidence:
+Configuration:
 
-- Starts high, then reduced for missing fields, weak history signal, and low trend observability.
-- Adjusted by ML quality when ML overlay is active.
+- `min_train_ratio=0.5`, `test_ratio=0.1`, `step_ratio=0.1`
+- windows total: `5`
 
-## 7) ML Pipeline and Training
+Macro PR-AUC mean:
 
-Training artifacts:
-
-- Model bundle: `backend/models/gridmind_ml_bundle_numpy.json`
-- Holdout report: `backend/models/gridmind_ml_training_report.json`
-- Chronological backtest: `backend/models/gridmind_realworld_backtest.json`
-
-Dataset:
-
-- Labeled rows: `52,560`
-- Targets:
-  - `overall_failure_72h_label`
-  - `power_failure_72h_label`
-  - `transformer_overload_72h_label`
-  - `water_failure_72h_label`
-  - `traffic_failure_72h_label`
-
-Model backend:
-
-- NumPy logistic regression per target with engineered infrastructure features
-- Learned blend weight for online overlay: `0.5929935889167225`
-
-## 8) Evaluation Results
-
-### Holdout (Training Report)
-
-- Macro PR-AUC: `0.3574839722918062`
-
-Per-target PR-AUC:
-
-- Overall failure: `0.7106`
-- Power failure: `0.0741`
-- Transformer overload: `0.1848`
-- Water failure: `0.1496`
-- Traffic failure: `0.6684`
-
-### Chronological Backtest (Real-World Labeled CSV)
-
-- Windows evaluated: `2`
-- Macro PR-AUC mean: `0.3625957396357277`
+- `0.3831`
 
 Per-target PR-AUC mean:
 
-- Overall failure: `0.7169`
-- Power failure: `0.1616`
-- Transformer overload: `0.1658`
-- Water failure: `0.1463`
-- Traffic failure: `0.6224`
+- overall `0.7391`
+- power `0.2080`
+- transformer `0.1946`
+- water `0.1421`
+- traffic `0.6320`
 
-### Metric Framing for Imbalance
+Temporal stability indicator:
 
-- Random PR-AUC baseline approximates class prevalence.
-- Runtime metric context now exposes:
-  - `macro_pr_auc_holdout`
-  - `random_baseline_pr_auc`
-  - `uplift_vs_baseline`
-- Current uplift vs baseline is positive (about `+0.136`), indicating non-random predictive signal under imbalanced classes.
+- Mean per-target PR-AUC standard deviation across windows: `0.0621` (moderate temporal variance)
 
-## 9) Explainability and Trust
+## 7) Baseline Benchmark (Rule vs ML vs Hybrid)
 
-Each assessment can now include:
+From `gridmind_baseline_comparison.json`:
+
+- macro random PR-AUC baseline: `0.2180`
+- macro PR-AUC:
+  - rule-only `0.3693`
+  - ML-only `0.3820`
+  - hybrid `0.3822`
+- macro uplift vs random:
+  - rule-only `+0.1513`
+  - ML-only `+0.1640`
+  - hybrid `+0.1643`
+
+Interpretation:
+
+- All approaches are above random baseline.
+- Hybrid currently yields the highest macro PR-AUC.
+- Hybrid is retained not solely for marginal PR-AUC uplift, but for deterministic safety constraints, graceful degradation under model drift, and municipal explainability requirements.
+- Power and water remain the hardest targets.
+
+## 8) Class Imbalance Framing
+
+Class prevalence (evaluation holdout):
+
+- overall `0.4608`
+- power `0.0542`
+- transformer `0.1469`
+- water `0.0970`
+- traffic `0.3310`
+
+Because failure targets are imbalanced, PR-AUC and uplift-vs-baseline are primary metrics; plain accuracy is secondary.
+
+Power-target caveat:
+
+- Power failure prediction remains the weakest class (holdout PR-AUC `0.0741`, backtest mean `0.2080`) due to extreme imbalance and weaker separability in current simulated telemetry; this class is prioritized for feature expansion and external telemetry enrichment.
+
+## 9) Calibration and Reliability
+
+Calibration is quantified:
+
+- `ece_10_bins` is reported in training/backtest/baseline artifacts.
+- reliability bin data (10 bins) is exported per target and model in `gridmind_baseline_comparison.json`.
+
+Current risk:
+
+- Power and water calibration error remains materially higher than overall and traffic classes.
+- Baseline comparison mean ECE across targets:
+  - rule-only `0.3290`
+  - hybrid `0.2652`
+  - ML-only `0.2253`
+
+## 10) Explainability
+
+Each assessment can include:
 
 - `ml_insights.top_features`:
-  - feature name
-  - normalized impact share
-  - direction (`increases_risk` / `reduces_risk`)
+  - feature
+  - impact share
+  - direction
   - signed logit contribution
 - `ml_insights.metric_context`:
   - macro PR-AUC
   - random baseline PR-AUC
   - uplift vs baseline
 
-This is rendered in the dashboard “Model Explainability” panel for judge and operator transparency.
+Dashboard includes a dedicated Model Explainability panel.
 
-## 10) Frontend Product Layer
+## 10.1) External Signal + Impact Model
 
-Frontend stack:
+Each assessment now also includes:
 
-- React + TypeScript + Tailwind
+- `external_signal`:
+  - source (`open-meteo.com`)
+  - fetch status
+  - weather anomaly flag and cross-check deltas
+- `impact_model`:
+  - estimated cost avoided over 72h
+  - estimated outage-hours avoided over 72h
+  - estimated emergency response-time gain
+  - explicit assumptions list
 
-Dashboard modules:
+## 11) Known Gaps (No Overclaim)
 
-- Control-room header and overall posture
-- Custom assessment input form (manual data entry + presets)
-- Risk gauges (overall/system)
-- System risk table (drivers + compound flags)
-- Cascading failure panel
-- Outlook panel (24h/72h)
-- Executive summary + priority intervention zones
-- Confidence indicator
-- Model explainability panel
+- Dataset is high-fidelity simulation, not live municipal telemetry.
+- Power and water labels remain sparse/noisy vs overall and traffic.
+- Geospatial dashboard district layer is now integrated with simulated zones; production GIS integration remains pending.
+- Production deployment requires live connectors, governance, and continuous recalibration.
+- Stress testing has been run on synthetic heatwave, high-density, and compound-failure scenarios; real-event stress validation remains pending external telemetry ingestion.
 
-UI direction:
+## 12) Geospatial Gap and Plan
 
-- Premium enterprise visual system with luxury dark-gold palette, layered gradients, and animated panel reveals.
+Current output includes a simulated district geospatial layer in the dashboard. Remaining gap is production GIS integration.
 
-## 11) Operational Status
+Planned upgrade:
 
-Current implementation supports:
+- district risk heatmap
+- cascade arrows between dependent zones
+- map-linked intervention prioritization
 
-- Manual input assessment
-- Saved assessment history
-- ML-enabled inference when bundle is present
-- Synthetic scenario generation for demos
-- Real telemetry + incidents CSV path for training/backtesting
+## 13) Runtime and Evaluation Efficiency
 
-## 12) Known Gaps and Risks
+Baseline comparison script was optimized for hackathon speed:
 
-- Data bottleneck remains the primary ceiling:
-  - power and water incident labels are still sparse/noisy relative to overall and traffic
-- Backtest window count is small (`2`) in current file; more temporal windows are needed for stronger stability claims
-- Geospatial district map and calibrated reliability plot are not yet integrated into the dashboard
+- tuple-based iteration
+- no per-row deep-copy overlay
+- direct hybrid blend math
+- fast default sampling (`stride=15`, `max_eval_rows=1200`)
 
-## 13) Next Execution Plan
-
-1. Expand labeled history across multiple cities and longer timelines.
-2. Increase backtest windows and publish confidence intervals per metric.
-3. Add map-based district risk overlay and cascade arrows.
-4. Add probability calibration chart (bin reliability curve + ECE visualization).
-5. Integrate real-time ingestion connectors (SCADA/IoT/event bus) for live operations mode.
+Observed runtime reduced from ~20+ minutes to ~92 seconds on current dataset.
 
 ## 14) Positioning Statement
 
-GridMind AI is a deployable municipal climate-resilience digital twin that predicts cross-system infrastructure failures before they cascade, combining deterministic safety logic, probabilistic ML calibration, interpretable outputs, and production-ready API persistence.
+GridMind AI is a climate-resilience smart-city intelligence layer and digital-twin control surface that combines deterministic safety logic, probabilistic forecasting, calibration-aware confidence, and operator-grade explainability for pre-failure municipal action.
+
+Production hardening plan includes model monitoring, drift detection, and scheduled recalibration cycles before municipal live operations.
+
+## 15) Visual Evidence Artifacts
+
+Generated judge-facing visuals:
+
+- `docs/assets/baseline_macro_pr_auc.svg`
+- `docs/assets/calibration_mean_ece.svg`
+- `docs/assets/calibration_curve_overall_hybrid.svg`
+- `docs/assets/temporal_pr_auc_stability.svg`
+
+These provide direct visual evidence for baseline comparison, calibration behavior, and temporal stability.
+
+Dashboard now renders these charts directly in the Model Evidence Board panel (not docs-only).
+
+## 16) Risk-Control Matrix
+
+Residual risk cannot be reduced to absolute zero in a hackathon MVP. Current controls are:
+
+- Data authenticity risk:
+  - Control: explicit simulation provenance statements + SCADA/IoT plug-in pathway.
+- Model quality risk (power/water):
+  - Control: PR-AUC baseline framing, per-target caveats, prioritized enrichment backlog.
+- Calibration risk:
+  - Control: ECE reporting + reliability-bin artifacts + recalibration plan.
+- Operational drift risk:
+  - Control: deterministic rules as fallback + planned drift monitoring and scheduled retraining.
+- Deployment overclaim risk:
+  - Control: explicit non-production declaration and staged hardening path.
+
+## 17) Demo Reliability Plan
+
+- Live URL path:
+  - frontend + backend deploy endpoints
+- Fallback path:
+  - offline mode toggle in dashboard
+- Backup path:
+  - 90-second pre-recorded walkthrough
+
+Reference:
+
+- `docs/demo_readiness.md`

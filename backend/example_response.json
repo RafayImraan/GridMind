@@ -79,6 +79,34 @@
   ],
   "executive_summary": "Metrovale is operating at CRITICAL infrastructure risk (100.0/100). Primary pressure is in power grid (100.0) followed by transformer overload (100.0). Cascading pathways currently include power_to_traffic_signal_dependency (impact +9.1 traffic risk); water_burst_to_traffic_disruption_in_dense_zones (impact +4.7 traffic risk). Prioritize preventive actions in the next operational window for these systems.",
   "confidence_score": 95,
+  "impact_model": {
+    "estimated_cost_avoided_usd_72h": 1312200.0,
+    "estimated_outage_hours_avoided_72h": 14.58,
+    "estimated_response_time_gain_percent": 28.2,
+    "assumptions": [
+      "Impact estimates are heuristic planning values, not audited financial statements.",
+      "Service interruption cost per hour scales with density and critical infrastructure overlap.",
+      "Estimated gains assume pre-emptive intervention is executed within 24-hour recommendations."
+    ]
+  },
+  "external_signal": {
+    "source": "open-meteo.com",
+    "signal_type": "live_weather_crosscheck",
+    "status": "ok",
+    "retrieved_at": "2026-02-26T12:20:00+00:00",
+    "details": {
+      "city": "Metrovale",
+      "mapped_latitude": 41.8781,
+      "mapped_longitude": -87.6298,
+      "external_temperature_c": 38.7,
+      "external_precipitation_mm": 2.4,
+      "external_wind_speed_kmh": 19.6,
+      "temperature_delta_c": -2.6,
+      "rainfall_delta_mm": -9.8,
+      "weather_anomaly_flag": false
+    },
+    "influence_note": "External weather signal aligned with submitted telemetry profile."
+  },
   "ml_insights": {
     "top_features": [
       {
