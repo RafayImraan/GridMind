@@ -17,6 +17,9 @@ frontend/tsconfig.tsbuildinfo
 # Backend runtime/storage
 backend/storage/
 
+# Competition hygiene
+docs/
+
 # OS/IDE
 .DS_Store
 Thumbs.db

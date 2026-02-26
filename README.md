@@ -1,16 +1,23 @@
 # GridMind AI
 
-Predictive urban infrastructure risk intelligence platform for 0-72 hour failure forecasting across power, transformer, water, and traffic systems.
+GridMind AI is a 0-72 hour urban infrastructure risk intelligence platform that predicts cascading failure risk across power, transformer, water, and traffic systems.
 
-## Data Provenance
+For a full technical and product explanation, see [`WRITEUP.md`](WRITEUP.md).
 
-Current `real_telemetry.csv` and `real_incidents.csv` are structured simulation datasets aligned with real-world infrastructure distributions for architecture and modeling validation.
+## Core Capabilities
 
-This repository is designed for direct plug-in with municipal SCADA / IoT telemetry and incident feeds without changing API contracts.
+- Hybrid risk engine: deterministic rules + ML probability overlay.
+- Compound amplification and cascading failure modeling.
+- 24-hour outlook and 72-hour projection.
+- Explainability (`top_features`, baseline uplift context).
+- Confidence scoring.
+- External live weather anomaly cross-check.
+- Assessment persistence with history API.
+- Live API mode and offline fallback mode in dashboard.
 
 ## Quick Start
 
-### Backend
+### 1) Backend API
 
 ```bash
 cd backend
@@ -20,28 +27,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-### ML Training Stack
-
-```bash
-cd backend
-pip install -r requirements-ml.txt
-```
-
-Optional advanced ML backend:
-
-```bash
-cd backend
-pip install -r requirements-ml-advanced.txt
-```
-
-### Synthetic Data
-
-```bash
-cd data_simulation
-python generate_scenarios.py --count 10 --seed 42 --output outputs/city_scenarios_10.json
-```
-
-### Frontend
+### 2) Frontend Dashboard
 
 ```bash
 cd frontend
@@ -49,67 +35,82 @@ npm install
 npm run dev
 ```
 
-Set API URL if needed:
+Optional API base URL override:
 
 ```bash
 set VITE_API_BASE_URL=http://localhost:8000
+```
+
+### 3) Health Checks
+
+```bash
+curl http://localhost:8000/health
+curl http://localhost:8000/api/v1/ml/status
 ```
 
 ## API Endpoints
 
 - `GET /health`
 - `POST /api/v1/risk/assess`
+- `GET /api/v1/risk/history?limit=20`
 - `GET /api/v1/simulate/scenarios?count=10&seed=42`
-- `GET /api/v1/risk/history?limit=20`
 - `GET /api/v1/ml/status`
+- `POST /api/v1/ml/reload`
 
-## Assessment Persistence
+## Persistence
 
-Each risk assessment submitted to `POST /api/v1/risk/assess` is saved automatically to:
+- Assessment storage file: `backend/storage/assessments.jsonl`
+- Successful assessment responses include `X-Assessment-Id` response header.
 
-- `backend/storage/assessments.jsonl`
+## ML + Evaluation Commands
 
-Each successful assessment response also returns:
-
-- `X-Assessment-Id` header
-
-You can read saved runs from:
-
-- `GET /api/v1/risk/history?limit=20`
-
-## Example Assets
-
-- Backend request example: `backend/example_request.json`
-- Backend response example: `backend/example_response.json`
-- Generated 10-scenario dataset: `data_simulation/outputs/city_scenarios_10.json`
-- ML training report: `backend/models/gridmind_ml_training_report.json`
-- ML backtest report: `backend/models/gridmind_realworld_backtest.json`
-- Baseline comparison report (rule vs ML vs hybrid): `backend/models/gridmind_baseline_comparison.json`
-- Visual artifacts:
-  - `docs/assets/baseline_macro_pr_auc.svg`
-  - `docs/assets/calibration_mean_ece.svg`
-  - `docs/assets/calibration_curve_overall_hybrid.svg`
-  - `docs/assets/temporal_pr_auc_stability.svg`
-- Proxy telemetry CSV: `backend/models/proxy_realworld_telemetry.csv`
-- Proxy incidents CSV: `backend/models/proxy_realworld_incidents.csv`
-
-## Documentation
-
-- System architecture: `docs/architecture.md`
-- Full rewritten project report: `docs/project_report.md`
-- API contract and schemas: `docs/api_contract.md`
-- Risk model formulas and weights: `docs/risk_model.md`
-- ML training and backtest workflow: `docs/ml_training_backtest.md`
-- Frontend dashboard design: `docs/frontend_dashboard_design.md`
-- Demo script and judging strategy: `docs/demo_strategy.md`
-- Demo readiness checklist: `docs/demo_readiness.md`
-- Winning positioning and roadmap: `docs/winning_positioning.md`
-
-## Artifact Generation
-
-Generate visual evidence SVGs from current metrics:
+Install ML stack:
 
 ```bash
 cd backend
-python -m ml.generate_visual_artifacts --baseline C:\Users\HomePC\Documents\gridmind\backend\models\gridmind_baseline_comparison.json --backtest C:\Users\HomePC\Documents\gridmind\backend\models\gridmind_realworld_backtest.json --output-dir C:\Users\HomePC\Documents\gridmind\docs\assets
+pip install -r requirements-ml.txt
 ```
+
+Train models from labeled dataset:
+
+```bash
+cd backend
+python -m ml.train --data models/real_world_labeled.csv --output-dir models
+```
+
+Run chronological backtest:
+
+```bash
+cd backend
+python -m ml.backtest --data models/real_world_labeled.csv --output models/gridmind_realworld_backtest.json
+```
+
+Run rule vs ML vs hybrid baseline comparison:
+
+```bash
+cd backend
+python -m ml.evaluate_baselines --data models/real_world_labeled.csv --output models/gridmind_baseline_comparison.json
+```
+
+Generate dashboard evidence SVGs:
+
+```bash
+cd backend
+python -m ml.generate_visual_artifacts --baseline models/gridmind_baseline_comparison.json --backtest models/gridmind_realworld_backtest.json --output-dir ..\frontend\public\evidence
+```
+
+## Example Files
+
+- Request payload: `backend/example_request.json`
+- Response payload: `backend/example_response.json`
+- Trained bundle: `backend/models/gridmind_ml_bundle_numpy.json`
+- Training report: `backend/models/gridmind_ml_training_report.json`
+- Backtest report: `backend/models/gridmind_realworld_backtest.json`
+- Baseline comparison report: `backend/models/gridmind_baseline_comparison.json`
+- Evidence charts (frontend): `frontend/public/evidence/`
+
+## Data Provenance
+
+Current `real_telemetry.csv` and `real_incidents.csv` in this MVP are structured simulation datasets aligned to realistic infrastructure distributions, used to validate architecture and modeling behavior.
+
+The system is intentionally designed for direct plug-in with municipal SCADA, IoT, and incident/event feeds without changing API contracts.
